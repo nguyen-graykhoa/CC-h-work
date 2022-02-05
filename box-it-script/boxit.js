@@ -22,6 +22,9 @@ const calculateMaxLength = (arr) => {
   return 0; //how should we handle an object of objects?
 };
 
+// // This is our box width
+// const MAX_LENGTH = calculateMaxLength(inputArr) + 1;
+
 /**
  *
  * startCharacter: the character appears on the left
@@ -42,14 +45,14 @@ const buildLine = (startCharacter, middleCharacter, endCharacter, length) => {
       middleOfLine = middleOfLine + middleCharacter;
     }
   }
-  line = startCharacter + middleOfLine + endCharacter;
+  line = startCharacter + middleOfLine + endCharacter; // *   -  * 5
   return line;
 };
 
 const boxIt = (arr) => {};
 
 /**
- * Draw a line using one single character:
+ * Draw a line using one single character: --------
  *
  * return a string (line) of character
  *
@@ -116,21 +119,73 @@ const drawBarsAround = (str) => {
   const LEFT_BAR = "\u251C";
   const RIGHT_BAR = "\u2524";
   let MIDDLE_BAR = str;
-  const LENGTH = 1; // We only one to display the str once
 
-  //const extraSpaceForPadding = appendSpaceToLine(MAX_LENGTH - str.length);
-  //MIDDLE_BAR = MIDDLE_BAR + extraSpaceForPadding;
-
-  let line = "";
+  const LENGTH = 1; // We only want to display the str once
 
   return buildLine(LEFT_BAR, MIDDLE_BAR, RIGHT_BAR, LENGTH);
 };
 
-console.log(drawTopBorder(20));
-console.log();
-console.log(drawBarsAround(' Rafa  '));
-console.log();
-console.log(drawMiddleBorder(20));
-console.log();
-console.log(drawBottomBorder(20));
-//console.log(drawLine(0));
+const buildInputArr = (arr) => {
+  const inputArr = [];
+  const isCSV = false;
+  if (process.argv.length < 3) {    
+    return [];
+  }
+
+  if (process.argv.length === 3) {
+    const [filename, extension] = process.argv[2].split(".");
+    if (extension === "csv") {
+      isCSV = true;
+    }
+  }
+
+  if (process.argv.length >= 3 && !isCSV) {
+    for (let index = 2; index < process.argv.length; index++) {
+      inputArr.push(process.argv[index]);
+    }
+  }
+  return inputArr;
+}
+
+const boxit = () => {
+  let inputArr = [];
+  let isCSV = false;
+  inputArr = buildInputArr(process.argv);
+
+  // This is our box width
+  const MAX_LENGTH = calculateMaxLength(inputArr) + 1;
+
+  let line = "";
+  let topLine = "";
+  let bottomLine = "";
+
+  // draw empty box
+  if (inputArr.length === 0) {
+    topLine = drawTopBorder(0);
+    bottomLine = drawBottomBorder(0);
+    line = topLine + "\n\n" + bottomLine;
+  }
+
+  // draw top border
+  // draw all the string in between, plus the seperator
+  // then draw the bottom border
+  if (inputArr.length > 0) {
+    topLine = drawTopBorder(MAX_LENGTH);
+    line = line + topLine;
+    line = line + "\n\n";
+
+    for (let index = 0; index < inputArr.length; index++) {
+      line = line + drawBarsAround(inputArr[index]) + "\n";
+      if (index !== inputArr.length - 1) {
+        line = line + drawMiddleBorder(MAX_LENGTH) + "\n";
+      }
+    }
+    bottomLine = drawBottomBorder(MAX_LENGTH);
+    line = "\n" + line + bottomLine;
+  }
+
+  return line;
+};
+
+ 
+console.log(boxit());
