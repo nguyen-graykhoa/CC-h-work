@@ -49,7 +49,7 @@ const buildLine = (startCharacter, middleCharacter, endCharacter, length) => {
   return line;
 };
 
-const boxIt = (arr) => {};
+//const boxIt = (arr) => {};
 
 /**
  * Draw a line using one single character: --------
@@ -125,18 +125,23 @@ const drawBarsAround = (str) => {
   return buildLine(LEFT_BAR, MIDDLE_BAR, RIGHT_BAR, LENGTH);
 };
 
+const drawBarOnLeft = (str) => {
+  const LEFT_BAR = "\u251C";
+  const RIGHT_BAR = "";
+  let MIDDLE_BAR = str;
+
+  const LENGTH = 1; // We only want to display the str once
+
+  return buildLine(LEFT_BAR, MIDDLE_BAR, RIGHT_BAR, LENGTH);
+};
+
+
+
 const buildInputArr = (arr) => {
   const inputArr = [];
   const isCSV = false;
-  if (process.argv.length < 3) {    
+  if (process.argv.length < 3) {
     return [];
-  }
-
-  if (process.argv.length === 3) {
-    const [filename, extension] = process.argv[2].split(".");
-    if (extension === "csv") {
-      isCSV = true;
-    }
   }
 
   if (process.argv.length >= 3 && !isCSV) {
@@ -145,12 +150,94 @@ const buildInputArr = (arr) => {
     }
   }
   return inputArr;
+};
+
+const isInputCSV = () => {
+  let isCSV = false;
+  let inputFile = "";
+  if (process.argv.length === 3) {
+    let [filename, extension] = process.argv[2].split(".");
+
+    if (extension === "csv") {
+      isCSV = true;
+      inputFile = process.argv[2];
+    } else {
+      return [];
+    }
+  }
+  return [isCSV, inputFile];
+};
+
+function createHeader(arr) {
+  let header = "";
+  for (let index = 0; index < 1; index++) {
+    let obj = arr[index];
+    for (let key in obj) {
+      header += key + ",";
+    }
+  }
+  return header;
 }
+
+function createDataArrayFromObjArr(arr) {
+  const dataArr = [];
+  for (let item of arr) {
+    let line = "";
+    for (let key in item) {
+      line += item[key] + ",";
+    }
+    dataArr.push(line);
+  }
+
+  return dataArr;
+}
+
+function processFile(fileName) {
+  const csv = require("csv-parser");
+  const fs = require("fs");
+  const results = [];
+
+  fs.createReadStream(fileName)
+    .pipe(csv())
+    .on("data", (data) => results.push(data))
+    .on("end", () => {
+      const header = createHeader(results);
+      const dataArr = createDataArrayFromObjArr(results);
+      const MAX_LENGTH = calculateMaxLength(dataArr);
+      const RIGHT_BAR = "\u2524";
+      console.log(drawTopBorder(MAX_LENGTH));
+      for (let element of dataArr) {
+        let lineArr = element.split(",").slice(0, element.length - 2);
+        lineArr.pop();
+        let eachLine = "";
+        for(let item of lineArr) {
+          eachLine += drawBarOnLeft(item);
+        }
+        console.log(eachLine + RIGHT_BAR) ;
+      }
+      console.log(drawBottomBorder(MAX_LENGTH));
+    });
+  return results;
+}
+
+
+const processCSV = (fileName) => {  
+  processFile(fileName);
+  return 'good bye';
+};
 
 const boxit = () => {
   let inputArr = [];
   let isCSV = false;
+  let inputFile = "";
+
   inputArr = buildInputArr(process.argv);
+  isCSV = isInputCSV()[0];
+  if (isCSV) {
+    inputFile = isInputCSV()[1];
+    processCSV(inputFile);
+    return;
+  }
 
   // This is our box width
   const MAX_LENGTH = calculateMaxLength(inputArr) + 1;
@@ -187,5 +274,4 @@ const boxit = () => {
   return line;
 };
 
- 
 console.log(boxit());
