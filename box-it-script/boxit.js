@@ -49,8 +49,6 @@ const buildLine = (startCharacter, middleCharacter, endCharacter, length) => {
   return line;
 };
 
-//const boxIt = (arr) => {};
-
 /**
  * Draw a line using one single character: --------
  *
@@ -135,8 +133,6 @@ const drawBarOnLeft = (str) => {
   return buildLine(LEFT_BAR, MIDDLE_BAR, RIGHT_BAR, LENGTH);
 };
 
-
-
 const buildInputArr = (arr) => {
   const inputArr = [];
   const isCSV = false;
@@ -197,33 +193,37 @@ function processFile(fileName) {
   const fs = require("fs");
   const results = [];
 
-  fs.createReadStream(fileName)
-    .pipe(csv())
-    .on("data", (data) => results.push(data))
-    .on("end", () => {
-      const header = createHeader(results);
-      const dataArr = createDataArrayFromObjArr(results);
-      const MAX_LENGTH = calculateMaxLength(dataArr);
-      const RIGHT_BAR = "\u2524";
-      console.log(drawTopBorder(MAX_LENGTH));
-      for (let element of dataArr) {
-        let lineArr = element.split(",").slice(0, element.length - 2);
-        lineArr.pop();
-        let eachLine = "";
-        for(let item of lineArr) {
-          eachLine += drawBarOnLeft(item);
-        }
-        console.log(eachLine + RIGHT_BAR) ;
-      }
-      console.log(drawBottomBorder(MAX_LENGTH));
-    });
+  try {
+    if (fs.existsSync(fileName)) {
+      fs.createReadStream(fileName)
+        .pipe(csv())
+        .on("data", (data) => results.push(data))
+        .on("end", () => {
+          const header = createHeader(results);
+          const dataArr = createDataArrayFromObjArr(results);
+          const MAX_LENGTH = calculateMaxLength(dataArr);
+          const RIGHT_BAR = "\u2524";
+          console.log(drawTopBorder(MAX_LENGTH));
+          for (let element of dataArr) {
+            let lineArr = element.split(",").slice(0, element.length - 2);
+            lineArr.pop();
+            let eachLine = "";
+            for (let item of lineArr) {
+              eachLine += drawBarOnLeft(item);
+            }
+            console.log(eachLine + RIGHT_BAR);
+          }
+          console.log(drawBottomBorder(MAX_LENGTH));
+        });
+    }
+  } catch (err) {}
+
   return results;
 }
 
-
-const processCSV = (fileName) => {  
+const processCSV = (fileName) => {
   processFile(fileName);
-  return 'good bye';
+  return "good bye";
 };
 
 const boxit = () => {
