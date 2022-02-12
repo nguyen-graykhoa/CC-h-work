@@ -1,0 +1,15 @@
+{
+  "name": "turtle_graphics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "turtle.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lines-js": "0.0.6"
+  }
+}
