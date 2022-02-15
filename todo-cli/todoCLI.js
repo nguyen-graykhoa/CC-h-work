@@ -135,7 +135,7 @@ function getUserInput(option) {
   }
 
   const userInput = prompt(question);
-
+  console.log("i am here"); // testing to be remove
   switch (option) {
     case "n":
       addTodo(userInput);
