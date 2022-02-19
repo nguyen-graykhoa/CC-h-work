@@ -1,8 +1,8 @@
-var readline = require("readline");
-var readline1 = require("readline");
+let readline = require("readline");
+
 const fs = require("fs");
 var rl = readline.createInterface(process.stdin, process.stdout);
-const WELCOME = "Welcome to Khoa's domain\n";
+const WELCOME = "Welcome to Todo CLI!\n";
 const SEPARATOR = "-----------------------\n";
 const MENU =
   "(v) View • ( n ) New • (cX) Complete • (dX) Delete • (s) Save • (q) Quit \n";
@@ -135,7 +135,7 @@ function getUserInput(option) {
   }
 
   const userInput = prompt(question);
-  console.log("i am here"); // testing to be remove
+  
   switch (option) {
     case "n":
       addTodo(userInput);
