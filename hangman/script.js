@@ -1,8 +1,13 @@
 const { log } = console;
  
-let userGuess = "  ";
+ 
 const WIN = "You win";
-const LOST = "Want to try your luck again?";
+const LOSS = "Want to try your luck again?";
+const WORDS = ["Johnny", "Jamerson", "Jeremy", "Anthony"];
+const RANDOM_WORD = WORDS[Math.floor(Math.random() * 4)].toUpperCase();
+let guessesCount = RANDOM_WORD.length;
+let lives = guessesCount;
+let userGuessArray = Array(guessesCount);
 
 let wordDiv = document.querySelector("#word");
 let alphabet = document.querySelector("#alphabet");
@@ -29,33 +34,27 @@ const drawArrayToScreen = (inputArray, element, strClassName) => {
   });
 };
 
-const initializeUserGuess = (guessesCount) => {
-  let arr = Array(guessesCount);
-  for (let i = 0; i < arr.length; i++) {
-    log("here");
-    arr[i] = "_";
-  }
-  return arr;
+const initializeUserGuess = () => {   
+  for (let i = 0; i < userGuessArray.length; i++) {
+    userGuessArray[i] = "_";  }
+  
+  return userGuessArray;
 };
 
  
 
-const drawGameBoard = () => {
-  const WORDS = ["Johnny", "Jamerson", "Jeremy", "Anthony"];
-  const RANDOM_WORD = WORDS[Math.floor(Math.random() * 4)].toLowerCase();
-  log("random ", RANDOM_WORD);
-  let guessesCount = RANDOM_WORD.length;
-  log('i got called')
-  let arr = initializeUserGuess(guessesCount);
-
+const drawGameBoard = () => {   
+  log("drawing Gameboard-RandomWord is: ", RANDOM_WORD);
+   
+  userGuessArray = initializeUserGuess();
   const ALPHABET = buildAlphabetArray();
   drawArrayToScreen(ALPHABET, alphabet, "btn btn-outline-primary alphabet"); //draw the alphabet array to screen
-  drawArrayToScreen(arr, wordDiv, "guess");
-
+  drawArrayToScreen(userGuessArray, wordDiv, "guess");
 }
 
 
 const drawGameOver = (strInput) => {
+  log('drawing GameOver')
   const bodyElement = document.querySelector("#BodyElement");
   bodyElement.className = "flex-center-column";
 
@@ -87,33 +86,39 @@ const drawGameOver = (strInput) => {
   }) 
 }
 
+const updateUserGuessArray = (charToBeFound) => {
+  for (let i = 0; i < RANDOM_WORD.length; i++) {
+    if (RANDOM_WORD[i] === charToBeFound) {
+      userGuessArray[i] = charToBeFound;
+    }
+  }
+}
+ 
+
 drawGameBoard();
-drawGameOver("Game Over")
+//drawGameOver("Game Over")
+
+
+let alphabetButtons = document.querySelectorAll(".alphabet");
+Array.from(alphabetButtons).map((button) => {
+  button.addEventListener("click", function(event) {    
+    log(`id:${button.id} is `, button.textContent); 
+    if (RANDOM_WORD.includes(button.textContent))
+    {
+      log('found match')
+      updateUserGuessArray(button.textContent);
+      wordDiv.innerHTML = ""
+      drawArrayToScreen(userGuessArray, wordDiv, "guess");
+    }
+    else {
+      lives--;
+    }
+  })
+})
 
  
-  // let alphabetButtons = document.querySelectorAll(".alphabet");
-  // let newUserGuessArray = Array(guesses_count);
-  // Array.from(alphabetButtons).map((button) => {
-  //   button.addEventListener("click", function (event) {
-  //     log(`id:${button.id} is `, button.textContent);       
-       
-  //     if (RANDOM_WORD.toLowerCase().includes(button.textContent.toLowerCase())) {
-  //       console.log(`found a match`)
-  //       let index = RANDOM_WORD.indexOf(button.textContent); 
-  //       log(`index of matching ${index}`)
-         
-  //       for(let i = 0; i < userGuessArray; i++){
-  //         if (i === index) {
-  //           newUserGuessArray[i] = RANDOM_WORD[index];
-  //         }
-  //         newUserGuessArray[i] = userGuessArray[i];
-  //         userGuessArray = newUserGuessArray;
-  //       }
+ 
 
-        
-  //     }
-  //   });
-  // });
  
  
 
