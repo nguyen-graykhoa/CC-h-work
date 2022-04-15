@@ -7,6 +7,7 @@ const WORDS = ["Johnny", "Jamerson", "Jeremy", "Anthony"];
 const RANDOM_WORD = WORDS[Math.floor(Math.random() * 4)].toUpperCase();
 let guessesCount = RANDOM_WORD.length;
 let lives = guessesCount;
+console.log( `lives: ${lives}`)
 let userGuessArray = Array(guessesCount);
 
 let wordDiv = document.querySelector("#word");
@@ -24,6 +25,7 @@ const buildAlphabetArray = () => {
 };
 
 const drawArrayToScreen = (inputArray, element, strClassName) => {
+  element.innerHTML = '';
   inputArray.map((character, index) => {
     let button = document.createElement("button");
     button.className = strClassName;
@@ -76,14 +78,16 @@ const drawGameOver = (strInput) => {
   const playAgain = document.querySelector("#playAgain");
 
   playAgain.addEventListener("click", function(event) {
-    console.log("playAgain clicked"); //now draw the game board
-    bodyElement.removeChild(newDiv);
-    bodyElement.removeChild(playAgain);
-    alphabet.classList.toggle("none");
-    wordDiv.classList.toggle("none");
-    divider.classList.toggle("none");
-    drawGameBoard();
-  }) 
+    // console.log("playAgain clicked"); //now draw the game board
+    // bodyElement.removeChild(newDiv);
+    // bodyElement.removeChild(playAgain);
+    // alphabet.classList.toggle("none");
+    // wordDiv.classList.toggle("none");
+    // divider.classList.toggle("none");
+    // drawGameBoard();
+    location.reload();
+  }) ;
+   
 }
 
 const updateUserGuessArray = (charToBeFound) => {
@@ -94,27 +98,40 @@ const updateUserGuessArray = (charToBeFound) => {
   }
 }
  
+const isGameOver = () => {  
+  if (lives === 0) {
+    return true;
+  }
+  return false;
+}
 
 drawGameBoard();
 //drawGameOver("Game Over")
 
 
-let alphabetButtons = document.querySelectorAll(".alphabet");
-Array.from(alphabetButtons).map((button) => {
-  button.addEventListener("click", function(event) {    
-    log(`id:${button.id} is `, button.textContent); 
-    if (RANDOM_WORD.includes(button.textContent))
-    {
-      log('found match')
-      updateUserGuessArray(button.textContent);
-      wordDiv.innerHTML = ""
-      drawArrayToScreen(userGuessArray, wordDiv, "guess");
-    }
-    else {
-      lives--;
-    }
-  })
-})
+ // drawGameBoard();
+  let alphabetButtons = document.querySelectorAll(".alphabet");
+  Array.from(alphabetButtons).map((button) => {
+    button.addEventListener("click", function (event) {
+      log(`id:${button.id} is `, button.textContent);
+      if (RANDOM_WORD.includes(button.textContent)) {
+        log("found match");
+        updateUserGuessArray(button.textContent);
+        wordDiv.innerHTML = "";
+        drawArrayToScreen(userGuessArray, wordDiv, "guess");
+        lives--;
+      } else {
+        lives--;
+        console.log("lives left: ", lives);
+      }
+
+      if (isGameOver()) {
+        drawGameOver();
+      }
+    });
+  });
+
+ 
 
  
  
