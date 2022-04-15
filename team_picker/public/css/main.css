@@ -1,0 +1,6 @@
+
+
+#show-delete:hover, #show-delete:focus, #show-delete:active, #show-delete.active, #show-delete:visited {
+    background-color: red !important;
+
+}

@@ -1,0 +1,17 @@
+.flex-center-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.none {
+  display: none;
+}
+
+.divider {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid grey;
+  width: 100%;
+}

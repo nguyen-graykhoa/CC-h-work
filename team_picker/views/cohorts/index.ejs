@@ -1,0 +1,27 @@
+<%- include("../partials/header.ejs") %> <% for (let cohort of cohorts) { %>
+ 
+  <div class="d-flex flex-column justify-content-around data-bs-toggle="tooltip"
+      data-bs-placement="top"
+      title="Click to View Cohort Details"">
+    <div class="card" style="margin-bottom: 10px">
+      <div class="card-body">
+        <h5 class="card-title d-flex">
+          <div>
+            <img  src="<%- cohort.logo_url %>" style="height: 40px; width: 40px; border-radius: 50%; margin-right: 5px;" >
+         </div>
+          <p><%- cohort.name %></p> 
+        </h5>
+        <p class="card-text">
+          <p><%- cohort.members %></p>
+        </p>
+      </div>
+      <div class="card-body d-flex justify-content-end">
+        <!-- <a href="/cohorts/show/"   class="btn btn-outline-primary stretched-link" style="width: 130px;" >Show cohort</a> -->
+         
+        <a href="/cohorts/<%- cohort.id %>"   class="btn btn-outline-primary stretched-link" style="width: 130px;" >Show cohort</a>
+        
+      </div>
+    </div>
+  </div>
+ 
+<% } %> <%- include("../partials/footer.ejs") %>
